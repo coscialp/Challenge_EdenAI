@@ -18,6 +18,21 @@ services:
     networks:
       - webapp
 
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "5050:80"
+    links:
+      - "db:psql-server"
+    networks:
+      - webapp
+
   frontend:
     build: ./frontend
     restart: always
@@ -35,11 +50,14 @@ services:
       - ./backend:/usr/src/app
     ports:
       - "8000:8000"
+    depends_on:
+      - db
     networks:
       - webapp
 
 volumes:
   db_data: {}
+  pgadmin: {}
 
 networks:
   webapp:
