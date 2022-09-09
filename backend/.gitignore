@@ -1,0 +1,5 @@
+.venv/
+*.sqlite3
+api/migrations/
+api/__pycache__/
+backend/__pycache__/

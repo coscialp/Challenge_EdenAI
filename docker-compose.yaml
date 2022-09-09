@@ -1,0 +1,46 @@
+version: '3.9'
+services:
+  db:
+    image: postgres
+    volumes:
+      - db_data:/var/lib/postgres
+    restart: always
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DATABASE: postgres
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    networks:
+      - webapp
+
+  frontend:
+    build: ./frontend
+    restart: always
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - "3000:3000"
+    networks:
+      - webapp
+
+  backend:
+    build: ./backend
+    restart: always
+    volumes:
+      - ./backend:/usr/src/app
+    ports:
+      - "8000:8000"
+    networks:
+      - webapp
+
+volumes:
+  db_data: {}
+
+networks:
+  webapp:
+    driver: bridge
