@@ -10,4 +10,6 @@ COPY . .
 
 EXPOSE 8000:8000
 
+RUN python3 -m pip install --upgrade pip
+
 CMD pip install -r requirements.txt && python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000

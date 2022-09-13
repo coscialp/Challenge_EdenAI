@@ -13,16 +13,15 @@
 }
 
 body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
   min-height: 100vh;
   background-image: $background-color;
 }
 
 .button {
-  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
   padding: 16px;
   border: none;
   border-radius: 8px;

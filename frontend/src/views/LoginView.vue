@@ -1,74 +1,76 @@
 <template>
-  <div class="card">
-    <h1 class="card__title" v-if="mode === 'login'">Connexion</h1>
-    <h1 class="card__title" v-else>Inscription</h1>
-    <p class="card__subtitle" v-if="mode === 'login'">
-      Pas encore de compte ?
-      <span class="card__action" @click="switchToRegister()"
-        >Créer un compte</span
-      >
-    </p>
-    <p class="card__subtitle" v-else>
-      Dejà inscrit ?
-      <span class="card__action" @click="switchToLogin()">Se connecter</span>
-    </p>
-    <div class="form-row">
-      <input
-        v-model="username"
-        class="form-row__input"
-        type="text"
-        placeholder="Nom d'utilisateur"
-      />
+  <main>
+    <div class="card">
+      <h1 class="card__title" v-if="mode === 'login'">Connexion</h1>
+      <h1 class="card__title" v-else>Inscription</h1>
+      <p class="card__subtitle" v-if="mode === 'login'">
+        Pas encore de compte ?
+        <span class="card__action" @click="switchToRegister()"
+          >Créer un compte</span
+        >
+      </p>
+      <p class="card__subtitle" v-else>
+        Dejà inscrit ?
+        <span class="card__action" @click="switchToLogin()">Se connecter</span>
+      </p>
+      <div class="form-row">
+        <input
+          v-model="username"
+          class="form-row__input"
+          type="text"
+          placeholder="Nom d'utilisateur"
+        />
+      </div>
+      <div class="form-row" v-if="mode === 'register'">
+        <input
+          v-model="email"
+          class="form-row__input"
+          type="text"
+          placeholder="Adresse mail"
+        />
+      </div>
+      <div class="form-row">
+        <input
+          v-model="password"
+          class="form-row__input"
+          type="password"
+          placeholder="Mot de passe"
+        />
+      </div>
+      <div class="form-row" v-if="mode === 'register'">
+        <input
+          v-model="password_confirm"
+          class="form-row__input"
+          type="password"
+          placeholder="Confirmer mot de passe"
+        />
+      </div>
+      <div class="form-row" v-if="mode === 'login'">
+        <button
+          @click="login"
+          @keyup.enter="login"
+          class="button"
+          :class="{ 'button--disable': !validatedForm }"
+          :disabled="!validatedForm"
+        >
+          <span v-if="status === 'loading'">Connexion en cours...</span>
+          <span v-else>Connexion</span>
+        </button>
+      </div>
+      <div class="form-row" v-else>
+        <button
+          @click="register"
+          @keyup.enter="register"
+          class="button"
+          :class="{ 'button--disable': !validatedForm }"
+          :disabled="!validatedForm"
+        >
+          <span v-if="status === 'loading'">Création en cours...</span>
+          <span v-else>Créer mon compte</span>
+        </button>
+      </div>
     </div>
-    <div class="form-row" v-if="mode === 'register'">
-      <input
-        v-model="email"
-        class="form-row__input"
-        type="text"
-        placeholder="Adresse mail"
-      />
-    </div>
-    <div class="form-row">
-      <input
-        v-model="password"
-        class="form-row__input"
-        type="password"
-        placeholder="Mot de passe"
-      />
-    </div>
-    <div class="form-row" v-if="mode === 'register'">
-      <input
-        v-model="password_confirm"
-        class="form-row__input"
-        type="password"
-        placeholder="Confirmer mot de passe"
-      />
-    </div>
-    <div class="form-row" v-if="mode === 'login'">
-      <button
-        @click="login"
-        @keyup.enter="login"
-        class="button"
-        :class="{ 'button--disable': !validatedForm }"
-        :disabled="!validatedForm"
-      >
-        <span v-if="status === 'loading'">Connexion en cours...</span>
-        <span v-else>Connexion</span>
-      </button>
-    </div>
-    <div class="form-row" v-else>
-      <button
-        @click="register"
-        @keyup.enter="register"
-        class="button"
-        :class="{ 'button--disable': !validatedForm }"
-        :disabled="!validatedForm"
-      >
-        <span v-if="status === 'loading'">Création en cours...</span>
-        <span v-else>Créer mon compte</span>
-      </button>
-    </div>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -86,7 +88,6 @@ export default {
     };
   },
   mounted: function () {
-    console.log(this.$store.state.user);
     if (this.$store.state.user.id !== -1) {
       this.$router.push("/home");
     }
@@ -139,6 +140,7 @@ export default {
         );
     },
     register: function () {
+      const self = this;
       this.$store
         .dispatch("register", {
           username: this.username,
@@ -147,8 +149,8 @@ export default {
           password2: this.password_confirm,
         })
         .then(
-          function (response) {
-            console.log(response);
+          function () {
+            self.login();
           },
           function (error) {
             console.log(error);
@@ -161,6 +163,14 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_variables.scss";
+
+main {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
 
 .card {
   max-width: 100%;
@@ -190,6 +200,10 @@ export default {
   }
 }
 
+.button {
+  width: 100%;
+}
+
 .form-row {
   display: flex;
   margin: 16px 0;
@@ -203,7 +217,7 @@ export default {
     background: #f2f2f2;
     font-weight: 500;
     font-size: 16px;
-    min-width: 100%;
+    min-width: 90%;
     color: black;
     flex: 1;
 
