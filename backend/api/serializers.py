@@ -44,6 +44,7 @@ def keyword_extraction(text):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()['amazon']['items']
 
+
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
@@ -80,19 +81,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username', 'email']
 
-
-class KeyWordSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = KeyWord
-        fields = ('id', 'word', 'in_file')
-
-
 class FileSerializer(serializers.ModelSerializer):
     size = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
     filetype = serializers.SerializerMethodField()
     since_added = serializers.SerializerMethodField()
-    keywordSerializer = KeyWordSerializer
     class Meta:
         model = File
         fields = ('id', 'file', 'since_added', 'size', 'name', 'filetype', 'owner', 'text')
@@ -127,3 +120,9 @@ class FileSerializer(serializers.ModelSerializer):
     def get_since_added(self, obj):
         date_added = obj.date_created
         return date_added
+
+
+class KeyWordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KeyWord
+        fields = ('id', 'word', 'in_file')

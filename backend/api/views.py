@@ -1,9 +1,11 @@
 from django.contrib.auth.models import User
-from .serializers import RegisterSerializer, UserSerializer
-from rest_framework import generics, viewsets
+from rest_framework.exceptions import PermissionDenied
+
+from .serializers import RegisterSerializer, UserSerializer, KeyWordSerializer
+from rest_framework import generics, viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .models import File
+from .models import File, KeyWord
 from .serializers import FileSerializer
 
 
@@ -23,6 +25,19 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
         if kwargs.get('pk') == 'me':
             return Response(self.get_serializer(request.user).data)
         return super().retrieve(request, args, kwargs)
+
+class KeyWordViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = KeyWordSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        file_id = self.request.query_params.get('file_id')
+        file = File.objects.filter(id=file_id, owner_id=self.request.user.pk)
+        if file:
+            return KeyWord.objects.filter(in_file=file_id)
+        else:
+            raise PermissionDenied()
+
 
 
 class FileViewSet(viewsets.ModelViewSet):

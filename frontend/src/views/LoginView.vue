@@ -1,24 +1,24 @@
 <template>
   <main>
     <div class="card">
-      <h1 class="card__title" v-if="mode === 'login'">Connexion</h1>
-      <h1 class="card__title" v-else>Inscription</h1>
+      <h1 class="card__title" v-if="mode === 'login'">Login</h1>
+      <h1 class="card__title" v-else>Registration</h1>
       <p class="card__subtitle" v-if="mode === 'login'">
-        Pas encore de compte ?
+        Not account yet ?
         <span class="card__action" @click="switchToRegister()"
-          >Créer un compte</span
+          >Create account</span
         >
       </p>
       <p class="card__subtitle" v-else>
-        Dejà inscrit ?
-        <span class="card__action" @click="switchToLogin()">Se connecter</span>
+        Already registered ?
+        <span class="card__action" @click="switchToLogin()">Log In</span>
       </p>
       <div class="form-row">
         <input
           v-model="username"
           class="form-row__input"
           type="text"
-          placeholder="Nom d'utilisateur"
+          placeholder="Username"
         />
       </div>
       <div class="form-row" v-if="mode === 'register'">
@@ -26,7 +26,7 @@
           v-model="email"
           class="form-row__input"
           type="text"
-          placeholder="Adresse mail"
+          placeholder="Email"
         />
       </div>
       <div class="form-row">
@@ -34,7 +34,7 @@
           v-model="password"
           class="form-row__input"
           type="password"
-          placeholder="Mot de passe"
+          placeholder="Password"
         />
       </div>
       <div class="form-row" v-if="mode === 'register'">
@@ -42,7 +42,7 @@
           v-model="password_confirm"
           class="form-row__input"
           type="password"
-          placeholder="Confirmer mot de passe"
+          placeholder="Confirm password"
         />
       </div>
       <div class="form-row" v-if="mode === 'login'">
@@ -53,8 +53,8 @@
           :class="{ 'button--disable': !validatedForm }"
           :disabled="!validatedForm"
         >
-          <span v-if="status === 'loading'">Connexion en cours...</span>
-          <span v-else>Connexion</span>
+          <span v-if="status === 'loading'">Log In...</span>
+          <span v-else>Log In</span>
         </button>
       </div>
       <div class="form-row" v-else>
@@ -65,8 +65,8 @@
           :class="{ 'button--disable': !validatedForm }"
           :disabled="!validatedForm"
         >
-          <span v-if="status === 'loading'">Création en cours...</span>
-          <span v-else>Créer mon compte</span>
+          <span v-if="status === 'loading'">Creation in progress...</span>
+          <span v-else>Create account</span>
         </button>
       </div>
     </div>
